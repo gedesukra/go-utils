@@ -28,8 +28,8 @@ type PayloadData struct {
 }
 
 type TokenPayload struct {
-	jwt.Payload
-	Data PayloadData
+	Payload jwt.Payload
+	Data    PayloadData
 }
 
 type TokenResult struct {
