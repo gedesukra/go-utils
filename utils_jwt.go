@@ -16,9 +16,10 @@ type PayloadSetting struct {
 }
 
 type PayloadParam struct {
-	UserId    string
-	UserEmail string
-	Created   string
+	UserId      string
+	UserEmail   string
+	Created     string
+	TokenAccess string
 }
 
 type PayloadData struct {
@@ -35,7 +36,7 @@ type TokenResult struct {
 	Status bool
 	Err    error
 	Msg    string
-	Data   PayloadData
+	Data   TokenPayload
 }
 
 func GetToken(payload PayloadData, secret string) (string, error) {
@@ -86,21 +87,21 @@ func VerifyToken(token string, secret string, audience []string) TokenResult {
 	if err != nil {
 		switch err {
 		case jwt.ErrIatValidation:
-			result = TokenResult{false, err, "Unable validate iat", tokenPayload.Data}
+			result = TokenResult{false, err, "Unable validate iat", tokenPayload}
 			return result
 		case jwt.ErrExpValidation:
-			result = TokenResult{false, err, "Expired token", tokenPayload.Data}
+			result = TokenResult{false, err, "Expired token", tokenPayload}
 			return result
 		case jwt.ErrAudValidation:
-			result = TokenResult{false, err, "Unable validate jwt au", tokenPayload.Data}
+			result = TokenResult{false, err, "Unable validate jwt au", tokenPayload}
 			return result
 		default:
-			result = TokenResult{false, err, "Unknown error", tokenPayload.Data}
+			result = TokenResult{false, err, "Unknown error", tokenPayload}
 			return result
 		}
 	}
 
-	result = TokenResult{true, err, "", tokenPayload.Data}
+	result = TokenResult{true, err, "", tokenPayload}
 
 	return result
 }
