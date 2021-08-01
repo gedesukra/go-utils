@@ -65,6 +65,8 @@ func isPrivateSubnet(ipAddress net.IP) bool {
 }
 
 func GetIPAddress(r *http.Request) string {
+
+	//Get IP from X-FORWARDED-FOR and X-REAL-IP header
 	for _, h := range []string{"X-Forwarded-For", "X-Real-Ip"} {
 		addresses := strings.Split(r.Header.Get(h), ",")
 		// march from right to left until we get a public address
@@ -80,5 +82,17 @@ func GetIPAddress(r *http.Request) string {
 			return ip
 		}
 	}
+
+	//Get IP from RemoteAddr
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return ""
+	}
+
+	netIP := net.ParseIP(ip)
+	if netIP != nil {
+		return ip
+	}
+
 	return ""
 }
