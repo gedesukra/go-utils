@@ -109,6 +109,18 @@ func GetDiffSeconds(param time.Time) int64 {
 	return min
 }
 
+func IsGreaterThan(start string, end string, typedate string) bool {
+	var layout string
+	if typedate == "datetime" {
+		layout = "2006-01-02 15:04:05"
+	} else {
+		layout = "2006-01-02"
+	}
+	dtStart, _ := time.Parse(layout, start)
+	dtEnd, _ := time.Parse(layout, end)
+	return dtStart.Before(dtEnd)
+}
+
 func IsGreaterThanNow(param string, typedate string) bool {
 	var layout string
 	if typedate == "datetime" {
